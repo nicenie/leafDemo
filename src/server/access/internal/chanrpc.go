@@ -2,7 +2,6 @@ package internal
 
 import (
 	"github.com/name5566/leaf/gate"
-	llog "github.com/name5566/leaf/log"
 )
 
 func init() {
