@@ -1,6 +1,7 @@
 package poker
 
 import (
+	"fmt"
 	"poker/card"
 	"sort"
 )
@@ -83,6 +84,19 @@ func (u *Util) GetSameEqXEx(cards card.CSlice, targetNum int) (result card.CSlic
 	return
 }
 
+// GetXCountVal 从牌组cards中获取count张val的牌
+func (u *Util) GetXCountVal(cards card.CSlice, val card.CDigit, count int) (result card.CSlice) {
+	for _, c := range cards {
+		if len(result) < count && val == c.GetDigit() {
+			result = append(result, c)
+		}
+		if len(result) == count {
+			break
+		}
+	}
+	return
+}
+
 //IsContainsX 牌组cards中是否包含有牌tc
 func (u *Util) IsContainsX(cards card.CSlice, tc card.CType) bool {
 	for _, c := range cards {
@@ -146,8 +160,65 @@ func (u *Util) GetMaxXShun(cards card.CSlice, x, limit int) (result card.CSlice)
 	ers := []card.CType{card.CType(card.CardErVal)}
 	exceptEr := u.GetExceptsXVals(cards, ers)
 	thanLimit, _ := u.GetSameEqXEx(exceptEr, x)
+	// fmt.Print("thanLimit:")
+	// fmt.Println(card.CGroupString(thanLimit))
 	singles, _ := u.GetSameEqXEx(thanLimit, 1)
 	sort.Sort(singles)
-
+	fmt.Print("singles:")
+	fmt.Println(card.CGroupString(singles))
+	sLen := len(singles)
+	var index, startIndex int = 0, -1
+	tmpShunzis := make([]ShunziT, 0)
+	tmpSz := make(card.CSlice, 0, len(singles))
+	for index < sLen-1 {
+		if startIndex < 0 {
+			startIndex = index
+		}
+		var ok, ok1 bool
+		if singles[index].GetDigit()+1 == singles[index+1].GetDigit() {
+			tmpSz = append(tmpSz, singles[index])
+			if len(tmpSz) == sLen-1 {
+				tmpSz = append(tmpSz, singles[index+1])
+				ok = true
+			}
+		} else { //broken
+			ok1 = true
+		}
+		if ok || ok1 {
+			if !ok {
+				tmpSz = append(tmpSz, singles[index])
+			}
+			szT := NewShunziT()
+			szT.Len = index - startIndex + 1
+			fmt.Println(szT.Len)
+			fmt.Println(limit)
+			if szT.Len >= limit {
+				szT.Cards = append(szT.Cards, tmpSz...)
+				tmpShunzis = append(tmpShunzis, szT)
+				fmt.Printf("tmpShunzi:%s\n", card.CGroupString(szT.Cards))
+			}
+			startIndex = -1
+			tmpSz = make(card.CSlice, 0, len(singles))
+		}
+		index++
+	}
+	index = 0
+	var maxLen int
+	for idx, sz := range tmpShunzis {
+		if maxLen <= 0 {
+			maxLen = sz.Len
+			index = idx
+		}
+		if sz.Len > maxLen {
+			maxLen = sz.Len
+			index = idx
+		}
+	}
+	if index >= 0 && index < len(tmpShunzis) && maxLen >= limit {
+		for _, c := range tmpShunzis[index].Cards {
+			tmp := u.GetXCountVal(cards, c.GetDigit(), x)
+			result = append(result, tmp...)
+		}
+	}
 	return
 }
