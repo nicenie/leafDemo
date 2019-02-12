@@ -1,7 +1,6 @@
 package poker
 
 import (
-	"fmt"
 	"poker/card"
 	"sort"
 )
@@ -164,8 +163,8 @@ func (u *Util) GetMaxXShun(cards card.CSlice, x, limit int) (result card.CSlice)
 	// fmt.Println(card.CGroupString(thanLimit))
 	singles, _ := u.GetSameEqXEx(thanLimit, 1)
 	sort.Sort(singles)
-	fmt.Print("singles:")
-	fmt.Println(card.CGroupString(singles))
+	// fmt.Print("singles:")
+	// fmt.Println(card.CGroupString(singles))
 	sLen := len(singles)
 	var index, startIndex int = 0, -1
 	tmpShunzis := make([]ShunziT, 0)
@@ -190,12 +189,10 @@ func (u *Util) GetMaxXShun(cards card.CSlice, x, limit int) (result card.CSlice)
 			}
 			szT := NewShunziT()
 			szT.Len = index - startIndex + 1
-			fmt.Println(szT.Len)
-			fmt.Println(limit)
 			if szT.Len >= limit {
 				szT.Cards = append(szT.Cards, tmpSz...)
 				tmpShunzis = append(tmpShunzis, szT)
-				fmt.Printf("tmpShunzi:%s\n", card.CGroupString(szT.Cards))
+				// fmt.Printf("tmpShunzi:%s\n", card.CGroupString(szT.Cards))
 			}
 			startIndex = -1
 			tmpSz = make(card.CSlice, 0, len(singles))

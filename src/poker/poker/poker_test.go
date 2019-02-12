@@ -68,12 +68,12 @@ func TestGetExcepts(t *testing.T) {
 }
 
 func TestGetMaxXShun(t *testing.T) {
-	cards := card.CSlice{0x05, 0x12, 0x04, 0x08, 0x01, 0x11, 0x21, 0x31, 0x03, 0x22, 0x33}
+	cards := card.CSlice{0x05, 0x12, 0x04, 0x08, 0x01, 0x11, 0x21, 0x31, 0x03, 0x22, 0x33, 0x02, 0x13}
 	sort.Sort(cards)
 	fmt.Println(card.CGroupString(cards))
-	result := util.GetMaxXShun(cards, 2, 2)
+	result := util.GetMaxXShun(cards, 3, 2)
 	fmt.Println(card.CGroupString(result))
-	if len(result) < 0 {
+	if len(result) <= 0 {
 		os.Exit(1)
 	}
 }
