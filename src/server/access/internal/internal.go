@@ -1,23 +1,32 @@
 package internal
 
 import (
-	"github.com/name5566/leaf/module"
 	"server/base"
+	"server/normal"
+
+	"github.com/name5566/leaf/module"
 )
 
 var (
+	// ChanRPC 模块间通信RPC
+	ChanRPC = skeleton.ChanRPCServer
+	//
 	skeleton = base.NewSkeleton()
-	ChanRPC  = skeleton.ChanRPCServer
+	// agent管理器
+	amgr = normal.NewAgentMap()
 )
 
+// Module leaf-module
 type Module struct {
 	*module.Skeleton
 }
 
+// OnInit leaf-module 要求实现接口
 func (m *Module) OnInit() {
 	m.Skeleton = skeleton
 }
 
+// OnDestroy leaf-module 要求实现接口
 func (m *Module) OnDestroy() {
 
 }

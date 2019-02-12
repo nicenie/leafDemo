@@ -1,13 +1,15 @@
 package internal
 
 import (
-	proto "github.com/golang/protobuf/proto"
-	"github.com/name5566/leaf/gate"
-	llog "github.com/name5566/leaf/log"
 	"reflect"
 	"server/msg"
 	"server/msg/globby"
 	"server/msg/innermsg"
+	"server/normal"
+
+	proto "github.com/golang/protobuf/proto"
+	"github.com/name5566/leaf/gate"
+	llog "github.com/name5566/leaf/log"
 )
 
 func init() {
@@ -42,5 +44,14 @@ func procLoginRequest(agent gate.Agent, head *innermsg.NetHead, data []byte) {
 		return
 	}
 	llog.Debug("login req: Account=%s|Nickname=%s|Sex=%d|HeadUrl=%s", req.Account, req.Nickname, req.Sex, req.HeadUrl)
+	// get data from db
 
+	if _, ok := amgr.Get(1); ok {
+		llog.Debug("key=%d already login.", 1)
+		return
+	}
+	meta := normal.NewAgentMeta()
+	meta.UID = 1
+	agent.SetUserData(meta)
+	amgr.Add(1, &agent)
 }

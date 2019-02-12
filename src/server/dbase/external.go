@@ -5,6 +5,8 @@ import (
 )
 
 var (
-	Module  = new(internal.Module)
+	// Module leaf db module
+	Module = new(internal.Module)
+	// ChanRPC db chanrpc
 	ChanRPC = internal.ChanRPC
 )
